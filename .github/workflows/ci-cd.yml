@@ -43,7 +43,7 @@ jobs:
         working-directory: terraform
 
       - name: Terraform Force Unlock
-        run: terraform force-unlock c50b84c0-ddce-bbc7-6851-c6a5dd42b02c
+        run: terraform force-unlock -auto-approve c50b84c0-ddce-bbc7-6851-c6a5dd42b02c
         working-directory: terraform
         continue-on-error: true
 
