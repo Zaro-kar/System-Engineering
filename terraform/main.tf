@@ -36,8 +36,8 @@ resource "azurerm_kubernetes_cluster" "main" {
 
   default_node_pool {
     name       = "default"
-    node_count = 2                     # Anzahl der Nodes im Cluster
-    vm_size    = "Standard_B2ms"       # Größe der virtuellen Maschinen
+    node_count = 1                     # Anzahl der Nodes im Cluster
+    vm_size    = "Standard_B1ms"       # Größe der virtuellen Maschinen
   }
 
   identity {
