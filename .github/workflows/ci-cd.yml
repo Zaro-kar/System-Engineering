@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Auslöser bei jedem Push in den "main"-Branch
+      - develop  # Auslöser bei jedem Push in den "main"-Branch
 
 jobs:
   build-and-deploy:
