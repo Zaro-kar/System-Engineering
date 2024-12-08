@@ -1,6 +1,3 @@
-Hier ist ein Vorschlag für eine initiale `README.md`, die dein Projekt beschreibt:
-
-```markdown
 # System Engineering & Management: Webanwendung mit AKS und Terraform
 
 Dieses Projekt ist Teil der Vorlesung "System Engineering & Management" und beinhaltet die Entwicklung und Bereitstellung einer containerisierten Webanwendung auf **Azure Kubernetes Service (AKS)**. Die Infrastruktur wird mit **Terraform** verwaltet.
@@ -109,6 +106,3 @@ projektordner/
 ---
 
 **Hinweis:** Bitte stelle sicher, dass sensible Daten wie Zugangsdaten nicht in das Git-Repository eincheckt werden. Nutze `.gitignore`, um Dateien wie `terraform.tfstate` auszuschließen.
-```
-
-Falls du etwas Spezielles hinzufügen möchtest, lass es mich wissen! 😊
