@@ -1,8 +1,8 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = azurerm_resource_group.backend.name
-    storage_account_name = azurerm_storage_account.backend.name
-    container_name       = azurerm_storage_container.backend.name
+    resource_group_name  = "webapp-backend-rg"
+    storage_account_name = "webapptfstate143101a"
+    container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }
 }
@@ -56,7 +56,7 @@ resource "azurerm_kubernetes_cluster" "main" {
   default_node_pool {
     name       = "default"
     node_count = 1
-    vm_size    = "Standard_B1ms"
+    vm_size    = "Standard_B2ms"
   }
 
   identity {
