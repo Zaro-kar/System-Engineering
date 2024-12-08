@@ -39,7 +39,7 @@ jobs:
       working-directory: terraform
 
     - name: Terraform Apply
-      run: terraform apply -parallelism=10 -auto-approve
+      run: terraform apply -parallelism=10 -auto-approve -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       working-directory: terraform
       env:
         TF_LOG: DEBUG
