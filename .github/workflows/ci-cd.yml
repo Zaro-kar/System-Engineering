@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - develop  # Auslöser bei jedem Push in den "main"-Branch
+      - develop  # Auslöser bei jedem Push in den "develop"-Branch
 
 permissions:
   id-token: write
@@ -26,7 +26,14 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    # 3. Terraform ausführen
+    # 3. Set environment variables for Terraform
+    - name: Set Terraform environment variables
+      run: |
+        echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+        echo "ARM_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
+        echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
+
+    # 4. Terraform ausführen
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
 
@@ -42,7 +49,7 @@ jobs:
       run: terraform apply -parallelism=10 -auto-approve -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       working-directory: terraform
 
-    # 4. Docker-Image bauen und in die ACR pushen
+    # 5. Docker-Image bauen und in die ACR pushen
     - name: Login to ACR
       run: |
         az acr login --name ${{ secrets.ACR_NAME }}
@@ -55,7 +62,7 @@ jobs:
       run: |
         docker push ${{ secrets.ACR_NAME }}.azurecr.io/webapp:latest
 
-    # 5. Kubernetes-Deployment aktualisieren
+    # 6. Kubernetes-Deployment aktualisieren
     - name: Apply Kubernetes deployment
       run: |
         kubectl apply -f webapp/k8s/deployment.yaml
