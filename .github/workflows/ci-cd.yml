@@ -5,6 +5,10 @@ on:
     branches:
       - develop  # Auslöser bei jedem Push in den "main"-Branch
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
