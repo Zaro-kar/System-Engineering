@@ -39,8 +39,11 @@ jobs:
       working-directory: terraform
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: terraform apply -parallelism=10 -auto-approve
       working-directory: terraform
+      env:
+        TF_LOG: DEBUG
+
 
     # 4. Docker-Image bauen und in die ACR pushen
     - name: Login to ACR
