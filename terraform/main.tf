@@ -1,8 +1,8 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = "webapp-rg"
-    storage_account_name = "webapptfstate143101a"
-    container_name       = "tfstate"
+    resource_group_name  = azurerm_resource_group.backend.name
+    storage_account_name = azurerm_storage_account.backend.name
+    container_name       = azurerm_storage_container.backend.name
     key                  = "terraform.tfstate"
   }
 }
@@ -13,6 +13,25 @@ provider "azurerm" {
   client_id       = var.client_id
   client_secret   = var.client_secret
   tenant_id       = var.tenant_id
+}
+
+resource "azurerm_resource_group" "backend" {
+  name     = "webapp-backend-rg"
+  location = "West Europe"
+}
+
+resource "azurerm_storage_account" "backend" {
+  name                     = "webapptfstate143101a"
+  resource_group_name      = azurerm_resource_group.backend.name
+  location                 = azurerm_resource_group.backend.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_storage_container" "backend" {
+  name                  = "tfstate"
+  storage_account_name  = azurerm_storage_account.backend.name
+  container_access_type = "private"
 }
 
 resource "azurerm_resource_group" "main" {
@@ -36,12 +55,12 @@ resource "azurerm_kubernetes_cluster" "main" {
 
   default_node_pool {
     name       = "default"
-    node_count = 1                     # Anzahl der Nodes im Cluster
-    vm_size    = "Standard_B1ms"       # Größe der virtuellen Maschinen
+    node_count = 1
+    vm_size    = "Standard_B1ms"
   }
 
   identity {
-    type = "SystemAssigned"            # Verwaltete Identität
+    type = "SystemAssigned"
   }
 
   tags = {
