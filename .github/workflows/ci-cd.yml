@@ -28,16 +28,14 @@ jobs:
 
     # 3. Terraform ausführen
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.5.5
+      uses: hashicorp/setup-terraform@v3
 
     - name: Terraform Init
       run: terraform init
       working-directory: terraform
 
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       working-directory: terraform
 
     - name: Terraform Apply
