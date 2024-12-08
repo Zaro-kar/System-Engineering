@@ -69,6 +69,15 @@ jobs:
           docker push ${{ secrets.ACR_NAME }}.azurecr.io/webapp:latest
 
       # 6. Kubernetes-Deployment aktualisieren
+      - name: Set up Kubernetes context
+        uses: azure/aks-set-context@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resource-group: webapp-rg
+          cluster-name: webapp-aks
+
       - name: Apply Kubernetes deployment
-        run: |
-          kubectl apply -f webapp/k8s/deployment.yaml
+        run: kubectl apply -f webapp/k8s/deployment.yaml
