@@ -39,7 +39,7 @@ jobs:
       uses: hashicorp/setup-terraform@v3
 
     - name: Terraform Init
-      run: terraform init
+      run: terraform init -auto-approve
       working-directory: terraform
 
     - name: Terraform Plan
