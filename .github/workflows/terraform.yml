@@ -41,19 +41,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Terraform Init for Backend
-        run: terraform init
-        working-directory: terraform/backend
-
-      - name: Terraform Plan for Backend
-        run: terraform plan -out=tfplan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
-        working-directory: terraform/backend
-
-      - name: Terraform Apply for Backend
-        run: terraform apply -parallelism=10 -auto-approve tfplan
+        run: |
+          terraform init
+          terraform plan -out=tfplan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+          terraform apply -parallelism=10 -auto-approve tfplan
         working-directory: terraform/backend
 
   terraform-main:
-    needs: setup-terraform
+    needs: terraform-backend
     runs-on: ubuntu-latest
 
     steps:
