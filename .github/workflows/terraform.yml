@@ -42,7 +42,7 @@ jobs:
 
       - name: Terraform Init for Backend
         run: terraform init
-        working-directory: backend
+        working-directory: terraform/backend
 
       - name: Terraform Plan for Backend
         run: terraform plan -out=tfplan \
@@ -50,11 +50,11 @@ jobs:
           -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
           -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
           -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
-        working-directory: backend
+        working-directory: terraform/backend
 
       - name: Terraform Apply for Backend
         run: terraform apply -parallelism=10 -auto-approve tfplan
-        working-directory: backend
+        working-directory: terraform/backend
 
   terraform-main:
     needs: terraform-backend
@@ -66,7 +66,7 @@ jobs:
 
       - name: Terraform Init for Main
         run: terraform init
-        working-directory: main
+        working-directory: terraform/main
 
       - name: Terraform Plan for Main
         run: terraform plan -out=tfplan \
@@ -74,8 +74,8 @@ jobs:
           -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
           -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
           -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
-        working-directory: main
+        working-directory: terraform/main
 
       - name: Terraform Apply for Main
         run: terraform apply -parallelism=10 -auto-approve tfplan
-        working-directory: main
+        working-directory: terraform/main
