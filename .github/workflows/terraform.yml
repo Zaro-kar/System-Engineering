@@ -54,6 +54,14 @@ jobs:
         run: terraform import -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" azurerm_resource_group.backend /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg
         working-directory: terraform
 
+      - name: Import Storage Account
+        run: terraform import -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" azurerm_storage_account.backend /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg/providers/Microsoft.Storage/storageAccounts/webapptfstate143101a
+        working-directory: terraform
+
+      - name: Import Storage Container
+        run: terraform import -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" azurerm_storage_container.backend /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg/providers/Microsoft.Storage/storageAccounts/webapptfstate143101a/blobServices/default/containers/tfstate
+        working-directory: terraform
+
       - name: Terraform Plan
         run: terraform plan -out "tfplan" -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
         working-directory: terraform
