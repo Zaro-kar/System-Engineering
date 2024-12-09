@@ -40,14 +40,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Initialize Terraform Backend
-        run: |
-          terraform init -reconfigure -backend-config="storage_account_name=webapptfstate143101a" -backend-config="container_name=tfstate" -backend-config="key=backend.tfstate"
-        working-directory: terraform/backend
-
-      - name: Import Existing Backend Resource Group
-        run: |
-          terraform import azurerm_resource_group.backend -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" azurerm_resource_group.backend "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg"
+      - name: Terraform Init for Backend
+        run: terraform init
         working-directory: terraform/backend
 
       - name: Terraform Plan for Backend
@@ -59,16 +53,15 @@ jobs:
         working-directory: terraform/backend
 
   terraform-main:
-    needs: terraform-backend
+    needs: [setup-terraform, terraform-backend]
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Initialize Terraform Main
-        run: |
-          terraform init -backend-config="storage_account_name=webapptfstate143101a" -backend-config="container_name=tfstate" -backend-config="key=main.tfstate"
+      - name: Terraform Init for Main
+        run: terraform init
         working-directory: terraform/main
 
       - name: Terraform Plan for Main
