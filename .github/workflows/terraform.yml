@@ -46,7 +46,7 @@ jobs:
         working-directory: terraform
 
       - name: Import Resource Group
-        run: terraform import azurerm_resource_group.backend /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg
+        run: terraform import -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" azurerm_resource_group.backend /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg
         working-directory: terraform
 
       - name: Terraform Plan
