@@ -41,6 +41,11 @@ jobs:
       - name: Create Storage Container
         run: az storage container create --name tfstate --account-name webapptfstate143101a --auth-mode login
 
+      - name: Ensure Terraform State Blob Exists
+        run: |
+          az storage blob show --account-name webapptfstate143101a --container-name tfstate --name terraform.tfstate || \
+          az storage blob upload --account-name webapptfstate143101a --container-name tfstate --name terraform.tfstate --file /dev/null
+
       - name: Release Blob Lease
         run: |
           lease_id=$(az storage blob lease acquire --account-name webapptfstate143101a --container-name tfstate --blob-name terraform.tfstate --lease-duration -1 --query leaseId -o tsv || echo "")
