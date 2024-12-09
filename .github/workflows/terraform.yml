@@ -40,14 +40,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Check if Backend Exists
+      - name: Initialize Terraform Backend
         run: |
-          terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER }}" -backend-config="key=backend.tfstate" || echo "Backend not initialized, continuing"
+          terraform init -reconfigure -backend-config="storage_account_name=webapptfstate143101a" -backend-config="container_name=tfstate" -backend-config="key=backend.tfstate"
         working-directory: terraform/backend
 
-      - name: Terraform Init for Backend
+      - name: Import Existing Backend Resource Group
         run: |
-          terraform init -reconfigure -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER }}" -backend-config="key=backend.tfstate"
+          terraform import azurerm_resource_group.backend "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-r" || echo "Resource already imported"
         working-directory: terraform/backend
 
       - name: Terraform Plan for Backend
@@ -66,9 +66,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Terraform Init for Main
+      - name: Initialize Terraform Main
         run: |
-          terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER }}" -backend-config="key=main.tfstate"
+          terraform init -backend-config="storage_account_name=webapptfstate143101a" -backend-config="container_name=tfstate" -backend-config="key=main.tfstate"
         working-directory: terraform/main
 
       - name: Terraform Plan for Main
