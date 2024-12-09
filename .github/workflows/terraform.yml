@@ -55,5 +55,5 @@ jobs:
         working-directory: terraform
 
       - name: Terraform Apply
-        run: terraform apply -parallelism=10 -auto-approve -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+        run: terraform apply -parallelism=10 -auto-approve "tfplan"
         working-directory: terraform
