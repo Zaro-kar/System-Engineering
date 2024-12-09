@@ -46,6 +46,21 @@ jobs:
           az storage blob show --account-name webapptfstate143101a --container-name tfstate --name terraform.tfstate || \
           az storage blob upload --account-name webapptfstate143101a --container-name tfstate --name terraform.tfstate --file /dev/null
 
+      - name: Clear Terraform State Lock
+        run: |
+          lock_id=$(az storage blob metadata show \
+            --account-name webapptfstate143101a \
+            --container-name tfstate \
+            --name terraform.tfstate --query "terraformlockid" -o tsv)
+          if [ -n "$lock_id" ]; then
+            echo "Clearing existing Terraform lock..."
+            az storage blob metadata update \
+              --account-name webapptfstate143101a \
+              --container-name tfstate \
+              --name terraform.tfstate \
+              --metadata terraformlockid=
+          fi
+
       - name: Release Blob Lease
         run: |
           lease_id=$(az storage blob lease acquire --account-name webapptfstate143101a --container-name tfstate --blob-name terraform.tfstate --lease-duration -1 --query leaseId -o tsv || echo "")
@@ -54,7 +69,7 @@ jobs:
           fi
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -lock-timeout=300s
         working-directory: terraform
 
       - name: Terraform Force Unlock
