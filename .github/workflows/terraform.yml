@@ -38,6 +38,9 @@ jobs:
       - name: Create Storage Account
         run: az storage account create --name webapptfstate143101a --resource-group webapp-backend-rg --location "West Europe" --sku Standard_LRS
 
+      - name: Create Storage Container
+        run: az storage container create --name tfstate --account-name webapptfstate143101a
+
       - name: Terraform Init
         run: terraform init
         working-directory: terraform
