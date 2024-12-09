@@ -1,7 +1,7 @@
 terraform {
   backend "azurerm" {
     resource_group_name  = "webapp-backend-rg"
-    storage_account_name = "webapptfstate143101a"
+    storage_account_id   = "/subscriptions/4a6822c3-c340-467b-a16b-cfc53e459b6a/resourceGroups/webapp-backend-rg/providers/Microsoft.Storage/storageAccounts/webapptfstate143101a"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }
