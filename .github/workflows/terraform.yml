@@ -45,11 +45,7 @@ jobs:
         working-directory: terraform/backend
 
       - name: Terraform Plan for Backend
-        run: terraform plan -out=tfplan \
-          -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" \
-          -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
-          -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
-          -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+        run: terraform plan -out=tfplan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
         working-directory: terraform/backend
 
       - name: Terraform Apply for Backend
@@ -69,11 +65,7 @@ jobs:
         working-directory: terraform/main
 
       - name: Terraform Plan for Main
-        run: terraform plan -out=tfplan \
-          -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" \
-          -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
-          -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
-          -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+        run: terraform plan -out=tfplan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
         working-directory: terraform/main
 
       - name: Terraform Apply for Main
