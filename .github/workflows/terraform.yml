@@ -43,8 +43,10 @@ jobs:
 
       - name: Release Blob Lease
         run: |
-          lease_id=$(az storage blob lease acquire --account-name webapptfstate143101a --container-name tfstate --blob-name terraform.tfstate --lease-duration -1 --query leaseId -o tsv)
-          az storage blob lease break --account-name webapptfstate143101a --container-name tfstate --blob-name terraform.tfstate --lease-id $lease_id
+          lease_id=$(az storage blob lease acquire --account-name webapptfstate143101a --container-name tfstate --blob-name terraform.tfstate --lease-duration -1 --query leaseId -o tsv || echo "")
+          if [ -n "$lease_id" ]; then
+            az storage blob lease break --account-name webapptfstate143101a --container-name tfstate --blob-name terraform.tfstate --lease-id $lease_id
+          fi
 
       - name: Terraform Init
         run: terraform init
