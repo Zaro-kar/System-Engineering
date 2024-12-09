@@ -53,7 +53,7 @@ jobs:
         working-directory: terraform/backend
 
   terraform-main:
-    needs: [setup-terraform, terraform-backend]
+    needs: setup-terraform
     runs-on: ubuntu-latest
 
     steps:
