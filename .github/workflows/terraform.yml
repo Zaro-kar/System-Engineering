@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
+  setup-terraform:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,19 +32,50 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init
+  terraform-backend:
+    needs: setup-terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Terraform Init for Backend
         run: terraform init
-        working-directory: terraform
+        working-directory: backend
 
-      - name: Terraform Force Unlock
-        run: terraform force-unlock -force c50b84c0-ddce-bbc7-6851-c6a5dd42b02c
-        working-directory: terraform
-        continue-on-error: true
+      - name: Terraform Plan for Backend
+        run: terraform plan -out=tfplan \
+          -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" \
+          -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
+          -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+          -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+        working-directory: backend
 
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
-        working-directory: terraform
-
-      - name: Terraform Apply
+      - name: Terraform Apply for Backend
         run: terraform apply -parallelism=10 -auto-approve tfplan
-        working-directory: terraform
+        working-directory: backend
+
+  terraform-main:
+    needs: terraform-backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Terraform Init for Main
+        run: terraform init
+        working-directory: main
+
+      - name: Terraform Plan for Main
+        run: terraform plan -out=tfplan \
+          -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" \
+          -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
+          -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+          -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+        working-directory: main
+
+      - name: Terraform Apply for Main
+        run: terraform apply -parallelism=10 -auto-approve tfplan
+        working-directory: main
