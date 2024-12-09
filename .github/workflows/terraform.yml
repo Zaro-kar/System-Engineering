@@ -50,15 +50,30 @@ jobs:
         working-directory: terraform
         continue-on-error: true
 
+      - name: Check if Resource Group is Managed
+        id: check_rg
+        run: terraform state list azurerm_resource_group.backend || echo "not managed"
+
       - name: Import Resource Group
+        if: steps.check_rg.outputs.result == 'not managed'
         run: terraform import -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" azurerm_resource_group.backend /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg
         working-directory: terraform
 
+      - name: Check if Storage Account is Managed
+        id: check_sa
+        run: terraform state list azurerm_storage_account.backend || echo "not managed"
+
       - name: Import Storage Account
+        if: steps.check_sa.outputs.result == 'not managed'
         run: terraform import -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" azurerm_storage_account.backend /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg/providers/Microsoft.Storage/storageAccounts/webapptfstate143101a
         working-directory: terraform
 
+      - name: Check if Storage Container is Managed
+        id: check_sc
+        run: terraform state list azurerm_storage_container.backend || echo "not managed"
+
       - name: Import Storage Container
+        if: steps.check_sc.outputs.result == 'not managed'
         run: terraform import -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" azurerm_storage_container.backend /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg/providers/Microsoft.Storage/storageAccounts/webapptfstate143101a/blobServices/default/containers/tfstate
         working-directory: terraform
 
