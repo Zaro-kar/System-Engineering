@@ -40,20 +40,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Check if Backend Exists
+        run: |
+          terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER }}" -backend-config="key=backend.tfstate" || echo "Backend not initialized, continuing"
+        working-directory: backend
+
       - name: Terraform Init for Backend
-        run: terraform init
-        working-directory: terraform/backend
+        run: |
+          terraform init -reconfigure -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER }}" -backend-config="key=backend.tfstate"
+        working-directory: backend
 
       - name: Terraform Plan for Backend
         run: terraform plan -out=tfplan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
-        working-directory: terraform/backend
+        working-directory: backend
 
       - name: Terraform Apply for Backend
         run: terraform apply -parallelism=10 -auto-approve tfplan
-        working-directory: terraform/backend
+        working-directory: backend
 
   terraform-main:
-    needs: [setup-terraform, terraform-backend]
+    needs: terraform-backend
     runs-on: ubuntu-latest
 
     steps:
@@ -61,13 +67,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Terraform Init for Main
-        run: terraform init
-        working-directory: terraform/main
+        run: |
+          terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER }}" -backend-config="key=main.tfstate"
+        working-directory: main
 
       - name: Terraform Plan for Main
         run: terraform plan -out=tfplan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
-        working-directory: terraform/main
+        working-directory: main
 
       - name: Terraform Apply for Main
         run: terraform apply -parallelism=10 -auto-approve tfplan
-        working-directory: terraform/main
+        working-directory: main
