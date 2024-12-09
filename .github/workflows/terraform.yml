@@ -45,6 +45,11 @@ jobs:
         run: terraform init
         working-directory: terraform
 
+      - name: Terraform Force Unlock
+        run: terraform force-unlock -force c50b84c0-ddce-bbc7-6851-c6a5dd42b02c
+        working-directory: terraform
+        continue-on-error: true
+
       - name: Import Resource Group
         run: terraform import -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}" azurerm_resource_group.backend /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/webapp-backend-rg
         working-directory: terraform
