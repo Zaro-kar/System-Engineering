@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  setup-terraform:
+  terraform:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,37 +32,22 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-  terraform-backend:
-    needs: setup-terraform
-    runs-on: ubuntu-latest
+      - name: Create Resource Group
+        run: az group create --name webapp-backend-rg --location "West Europe"
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Terraform Init for Backend
-        run: |
-          terraform init
-          terraform plan -out=tfplan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
-          terraform apply -parallelism=10 -auto-approve tfplan
-        working-directory: terraform/backend
-
-  terraform-main:
-    needs: terraform-backend
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Terraform Init for Main
+      - name: Terraform Init
         run: terraform init
-        working-directory: terraform/main
+        working-directory: terraform
 
-      - name: Terraform Plan for Main
-        run: terraform plan -out=tfplan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
-        working-directory: terraform/main
+      - name: Terraform Force Unlock
+        run: terraform force-unlock -force c50b84c0-ddce-bbc7-6851-c6a5dd42b02c
+        working-directory: terraform
+        continue-on-error: true
 
-      - name: Terraform Apply for Main
-        run: terraform apply -parallelism=10 -auto-approve tfplan
-        working-directory: terraform/main
+      - name: Terraform Plan
+        run: terraform plan -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+        working-directory: terraform
+
+      - name: Terraform Apply
+        run: terraform apply -parallelism=10 -auto-approve -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+        working-directory: terraform
