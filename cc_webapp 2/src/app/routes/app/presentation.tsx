@@ -1,11 +1,17 @@
+import { VBox } from "@/components/ui"
+import { Cloud } from "@/features/presentation/components/cloud"
 import { Typography } from "@mui/material"
 
 export const PresentationRoute = () => {
     return (
         <>
-            <Typography variant="h3">
-                CrowdCloud
-            </Typography>
+            <VBox>
+                <Typography variant="h3">
+                    CrowdCloud Presentation
+                </Typography>
+
+                <Cloud/>
+            </VBox>
         </>
     )
 }

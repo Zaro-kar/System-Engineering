@@ -9,7 +9,7 @@ export const VotingRoute = () => {
             <Container maxWidth={'sm'}>
                 <VBox sx={{ gap: 4, marginTop: 6}}>
                     {/* Heading */}
-                    {/* icon */}
+                    {/* add icon */}
                     <Typography variant={'h3'} align="center">
                         CrowdCloud
                     </Typography>
@@ -18,11 +18,10 @@ export const VotingRoute = () => {
                         What are you hoping to get out of this session?
                     </Typography>
 
-                    {/* Form */}
+                    {/* Voting Form */}
                     <VotingForm />
                 </VBox>
             </Container>
-
         </>
     )
 }
