@@ -38,7 +38,7 @@ sketch
 .ionide
 
 # production
-/dist
+*/dist
 
 # misc
 .DS_Store
