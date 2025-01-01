@@ -1,10 +1,10 @@
 from django.db import models
 import uuid
-from django.contrib.postgres.fields import JSONField
+import random
 
 class Session(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    numeric_id = models.AutoField(primary_key=True)
+    numeric_id = models.CharField(max_length=3, unique=True, null=True, blank=True) 
     words = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
 
