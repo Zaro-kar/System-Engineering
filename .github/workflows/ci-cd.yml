@@ -26,17 +26,21 @@ jobs:
 
       - name: Login to ACR
         run: |
-          az acr login --name ${{ secrets.ACR_NAME }}
+          echo ${{ secrets.AZURE_CLIENT_SECRET }} | docker login ${{ secrets.ACR_NAME }}.azurecr.io -u ${{ secrets.AZURE_CLIENT_ID }} --password-stdin
 
       - name: Build and Push Frontend Image
-        run: |
-          docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/cc_webapp:latest ./cc_webapp
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/cc_webapp:latest
+        uses: docker/build-push-action@v5
+        with:
+          context: ./cc_webapp
+          push: true
+          tags: ${{ secrets.ACR_NAME }}.azurecr.io/cc_webapp:latest
 
       - name: Build and Push Backend Image
-        run: |
-          docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/cc_backend:latest ./cc_backend
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/cc_backend:latest
+        uses: docker/build-push-action@v5
+        with:
+          context: ./cc_backend
+          push: true
+          tags: ${{ secrets.ACR_NAME }}.azurecr.io/cc_backend:latest
 
       - name: Set up AKS context
         run: |
