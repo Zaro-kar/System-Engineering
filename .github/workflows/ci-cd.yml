@@ -24,22 +24,23 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Assign AcrPush role
+        run: |
+          az role assignment create --assignee ${{ secrets.AZURE_CLIENT_ID }} --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.RESOURCE_GROUP }}/providers/Microsoft.ContainerRegistry/registries/${{ secrets.ACR_NAME }} --role AcrPush
+
       - name: Build and Push Frontend Image
         run: |
           az acr build --registry ${{ secrets.ACR_NAME }} --image cc_webapp:latest ./cc_webapp
 
-      # 4. Build and Push Backend Image to ACR
       - name: Build and Push Backend Image
         run: |
           az acr build --registry ${{ secrets.ACR_NAME }} --image cc_backend:latest ./cc_backend
 
-      # 5. Set up Kubernetes context
       - name: Set up AKS context
         run: |
           az aks get-credentials --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.CLUSTER_NAME }} --overwrite-existing
           kubectl config view
 
-      # 6. Update Kubernetes Deployments
       - name: Update Backend Deployment
         run: |
           kubectl set image deployment/cc-backend-deployment cc-backend=${{ secrets.ACR_NAME }}.azurecr.io/cc_backend:latest -n cc-namespace
@@ -47,4 +48,3 @@ jobs:
       - name: Update Frontend Deployment
         run: |
           kubectl set image deployment/cc-webapp-deployment cc-webapp=${{ secrets.ACR_NAME }}.azurecr.io/cc_webapp:latest -n cc-namespace
-
