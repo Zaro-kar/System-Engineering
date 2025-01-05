@@ -4,7 +4,7 @@ metadata:
   name: cc-webapp-deployment
   namespace: cc-namespace
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: cc-webapp
