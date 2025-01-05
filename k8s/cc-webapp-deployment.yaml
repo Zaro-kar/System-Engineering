@@ -13,6 +13,8 @@ spec:
       labels:
         app: cc-webapp
     spec:
+      imagePullSecrets:
+      - name: acr-secret
       containers:
       - name: cc-webapp
         image: webappacr143101a.azurecr.io/cc_webapp:latest # ACR Image
