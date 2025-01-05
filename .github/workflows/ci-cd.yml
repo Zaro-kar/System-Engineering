@@ -24,24 +24,27 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Login to ACR
+      - name: Build and Push Frontend Image
         run: |
-          az acr login --name ${{ secrets.ACR_NAME }}
+          az acr build --registry ${{ secrets.ACR_NAME }} --image cc_webapp:latest ./cc_webapp
 
-      - name: Build Docker image
+      # 4. Build and Push Backend Image to ACR
+      - name: Build and Push Backend Image
         run: |
-          docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/webapp:latest ./webapp
+          az acr build --registry ${{ secrets.ACR_NAME }} --image cc_backend:latest ./cc_backend
 
-      - name: Push Docker image to ACR
+      # 5. Set up Kubernetes context
+      - name: Set up AKS context
         run: |
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/webapp:latest
+          az aks get-credentials --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.CLUSTER_NAME }} --overwrite-existing
+          kubectl config view
 
-      - name: Set up Kubernetes context
-        uses: azure/aks-set-context@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          resource-group: webapp-rg
-          cluster-name: webapp-aks
+      # 6. Update Kubernetes Deployments
+      - name: Update Backend Deployment
+        run: |
+          kubectl set image deployment/cc-backend-deployment cc-backend=${{ secrets.ACR_NAME }}.azurecr.io/cc_backend:latest -n cc-namespace
 
-      - name: Apply Kubernetes deployment
-        run: kubectl apply -f webapp/k8s/deployment.yaml
+      - name: Update Frontend Deployment
+        run: |
+          kubectl set image deployment/cc-webapp-deployment cc-webapp=${{ secrets.ACR_NAME }}.azurecr.io/cc_webapp:latest -n cc-namespace
+
