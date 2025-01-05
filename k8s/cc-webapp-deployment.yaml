@@ -1,37 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cc-webapp-deployment
-  namespace: cc-namespace
+  name: cc-webapp-deployment
+  namespace: cc-namespace
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: cc-webapp
-  template:
-    metadata:
-      labels:
-        app: cc-webapp
-    spec:
-      containers:
-      - name: cc-webapp
-        image: <your-acr-name>.azurecr.io/cc_webapp:latest # ACR Image
-        ports:
-        - containerPort: 80
-        env:
-        - name: REACT_APP_API_URL
-          value: "http://cc-backend-service:8000" # URL zum Backend
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cc-webapp
+  template:
+    metadata:
+      labels:
+        app: cc-webapp
+    spec:
+      containers:
+      - name: cc-webapp
+        image: <your-acr-name>.azurecr.io/cc_webapp:latest # ACR Image
+        ports:
+        - containerPort: 80
+        env:
+        - name: REACT_APP_API_URL
+          value: "http://cc-backend-service:8000" # URL zum Backend
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cc-webapp-service
-  namespace: cc-namespace
+  name: cc-webapp-service
+  namespace: cc-namespace
 spec:
-  selector:
-    app: cc-webapp
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
-  type: LoadBalancer
+  selector:
+    app: cc-webapp
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
