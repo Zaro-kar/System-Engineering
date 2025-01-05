@@ -13,9 +13,11 @@ spec:
       labels:
         app: cc-backend
     spec:
+      imagePullSecrets:
+      - name: acr-secret
       containers:
       - name: cc-backend
-        image: webappacr143101a/cc_backend:latest
+        image: webappacr143101a.azurecr.io/cc_backend:latest
         ports:
         - containerPort: 8000
 ---
