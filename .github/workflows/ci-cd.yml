@@ -47,10 +47,10 @@ jobs:
           az aks get-credentials --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.CLUSTER_NAME }} --overwrite-existing
           kubectl config view
 
-      - name: Update Backend Deployment
+      - name: Deploy Kubernetes Manifests
         run: |
-          kubectl set image deployment/cc-backend-deployment cc-backend=${{ secrets.ACR_NAME }}.azurecr.io/cc_backend:latest -n cc-namespace
-
-      - name: Update Frontend Deployment
-        run: |
-          kubectl set image deployment/cc-webapp-deployment cc-webapp=${{ secrets.ACR_NAME }}.azurecr.io/cc_webapp:latest -n cc-namespace
+          kubectl apply -f k8s/namespaces.yaml
+          kubectl apply -f k8s/cc-webapp-deployment.yaml
+          kubectl apply -f k8s/cc-backend-deployment.yaml
+          kubectl apply -f k8s/ingress.yaml
+          kubectl rollout restart deployment
