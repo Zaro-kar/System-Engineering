@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: cc-webapp
-        image: <your-acr-name>.azurecr.io/cc_webapp:latest # ACR Image
+        image: webappacr143101a.azurecr.io/cc_webapp:latest # ACR Image
         ports:
         - containerPort: 80
         env:
