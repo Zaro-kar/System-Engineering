@@ -56,4 +56,3 @@ jobs:
           kubectl apply -f k8s/cc-webapp-service.yaml
           kubectl rollout restart deployment cc-webapp-deployment
           kubectl rollout restart deployment cc-backend-deployment
-          kubectl rollout restart deployment cc-ingress
