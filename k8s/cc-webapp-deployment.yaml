@@ -18,7 +18,7 @@ spec:
       - name: cc-webapp
         image: webappacr143101a.azurecr.io/cc_webapp:latest # ACR Image
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         env:
         - name: REACT_APP_API_URL
           value: "http://cc-backend-service:8000" # URL zum Backend
