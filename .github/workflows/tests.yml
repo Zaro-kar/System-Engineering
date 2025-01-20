@@ -1,0 +1,83 @@
+name: Tests and Security Scan
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+
+jobs:
+  setup:
+    name: Setup environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install --upgrade setuptools
+
+      - name: Cache virtual environment
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            venv-${{ runner.os }}-
+
+  unit-tests:
+    name: Run backend unit tests
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Restore cached virtual environment
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
+      - name: Run Tests
+        run: |
+          source .venv/bin/activate
+          python manage.py test
+
+  security-scan:
+    name: Run security scan
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Restore cached virtual environment
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
+      - name: Security scan (pip-audit)
+        run: |
+          source .venv/bin/activate
+          pip install pip-audit
+          pip-audit --strict
+
+      - name: Install Syft (SBOM generation)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh
+
+      - name: Generate SBOM
+        run: ./bin/syft . --exclude './bin' -o cyclonedx-json > sbom.json
+
+      - name: Install Grype (for vulnerability scanning)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh
+
+      - name: Scan for vulnerabilities (using Grype)
+        run: ./bin/grype sbom:sbom.json --fail-on high
