@@ -20,6 +20,7 @@ jobs:
           python-version: "3.11"
 
       - name: Create and activate virtual environment
+        working-directory: cc_backend
         run: |
           python -m venv .venv
           source .venv/bin/activate
@@ -30,8 +31,8 @@ jobs:
       - name: Cache virtual environment
         uses: actions/cache@v3
         with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          path: cc_backend/.venv
+          key: venv-${{ runner.os }}-${{ hashFiles('cc_backend/requirements.txt') }}
           restore-keys: |
             venv-${{ runner.os }}-
 
@@ -43,10 +44,11 @@ jobs:
       - name: Restore cached virtual environment
         uses: actions/cache@v3
         with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          path: cc_backend/.venv
+          key: venv-${{ runner.os }}-${{ hashFiles('cc_backend/requirements.txt') }}
 
       - name: Run Tests
+        working-directory: cc_backend
         run: |
           source .venv/bin/activate
           python manage.py test
@@ -59,25 +61,30 @@ jobs:
       - name: Restore cached virtual environment
         uses: actions/cache@v3
         with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          path: cc_backend/.venv
+          key: venv-${{ runner.os }}-${{ hashFiles('cc_backend/requirements.txt') }}
 
       - name: Security scan (pip-audit)
+        working-directory: cc_backend
         run: |
           source .venv/bin/activate
           pip install pip-audit
           pip-audit --strict
 
       - name: Install Syft (SBOM generation)
+        working-directory: cc_backend
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh
 
       - name: Generate SBOM
+        working-directory: cc_backend
         run: ./bin/syft . --exclude './bin' -o cyclonedx-json > sbom.json
 
       - name: Install Grype (for vulnerability scanning)
+        working-directory: cc_backend
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh
 
       - name: Scan for vulnerabilities (using Grype)
+        working-directory: cc_backend
         run: ./bin/grype sbom:sbom.json --fail-on high
