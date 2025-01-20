@@ -115,7 +115,7 @@ jobs:
         run: |
           source .venv/bin/activate
           pip install pylint
-          pylint cc_backend
+          pylint pylint --rcfile=.pylintrc .
 
   static-code-analysis-frontend:
     name: Static Code Analysis Frontend
