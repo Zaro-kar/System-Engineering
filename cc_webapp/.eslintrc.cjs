@@ -4,7 +4,7 @@ module.exports = {
     node: true,
     es6: true,
   },
-  parser: '@typescript-eslint/parser', 
+  parser: '@typescript-eslint/parser',
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   ignorePatterns: [
     'node_modules/*',
@@ -51,8 +51,6 @@ module.exports = {
           'error',
           {
             zones: [
-              // disables cross-feature imports:
-              // eg. src/features/discussions should not import from src/features/comments, etc.
               {
                 target: './src/features/auth',
                 from: './src/features',
@@ -78,15 +76,10 @@ module.exports = {
                 from: './src/features',
                 except: ['./users'],
               },
-              // enforce unidirectional codebase:
-
-              // e.g. src/app can import from src/features but not the other way around
               {
                 target: './src/features',
                 from: './src/app',
               },
-
-              // e.g src/features and src/app can import from these shared modules but not the other way around
               {
                 target: [
                   './src/components',
