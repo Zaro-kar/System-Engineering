@@ -75,7 +75,6 @@ jobs:
         working-directory: cc_backend
         run: |
           source .venv/bin/activate
-          pip install pip-audit
           pip-audit --strict
 
       - name: Install Syft (SBOM generation)
@@ -114,7 +113,6 @@ jobs:
         working-directory: cc_backend
         run: |
           source .venv/bin/activate
-          pip install pylint
           pylint --rcfile=.pylintrc .
 
   static-code-analysis-frontend:
