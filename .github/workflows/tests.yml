@@ -36,7 +36,6 @@ jobs:
           restore-keys: |
             venv-${{ runner.os }}-
 
-
   unit-tests:
     name: Run backend unit tests
     runs-on: ubuntu-latest
