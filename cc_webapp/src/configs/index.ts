@@ -1,5 +1,5 @@
-export const API_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:8000/';
+export const API_URL = import.meta.env.VITE_APP_API_URL || 'http://50.85.88.155/api';
 
-export const WS_URL = import.meta.env.VITE_APP_WS_URL || 'ws://localhost:8000/';
+export const WS_URL = import.meta.env.VITE_APP_WS_URL || 'ws://50.85.88.155/api';
 
-export const FRONTEND_URL = import.meta.env.VITE_APP_FRONTEND_URL || 'http://localhost:5173/';
+export const FRONTEND_URL = import.meta.env.VITE_APP_FRONTEND_URL || 'http://50.85.88.155';
