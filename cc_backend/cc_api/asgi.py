@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 
 import os
 
-from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.routing import ProtocolTypeRouter, URLRouter # pylint: disable=E0401
 from django.core.asgi import get_asgi_application
 
 from cc_wordcloud.routing import websocket_urlpatterns

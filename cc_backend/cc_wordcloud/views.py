@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from channels.layers import get_channel_layer
+from channels.layers import get_channel_layer # pylint: disable=E0401
 from asgiref.sync import async_to_sync
 
 
@@ -156,10 +156,10 @@ class VoteView(APIView):
             {
                 "type": "words_update",
                 "session": str(session.uuid),
-            } 
+            }
         )
 
         return Response(
-            {"message": f"Words has been submitted."},
+            {"message": "Words has been submitted."},
             status=status.HTTP_200_OK,
         )
