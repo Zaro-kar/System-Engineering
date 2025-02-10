@@ -1,6 +1,8 @@
 import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+import { paths } from '@/configs/path';
+
 export const NotFoundRoute = () => {
    const navigate = useNavigate();
 
@@ -24,9 +26,8 @@ export const NotFoundRoute = () => {
          </Typography>
          <Button
             variant="contained"
-            
             sx={{ color: 'white', marginTop: 3 }}
-            onClick={() => navigate('/login')}
+            onClick={() => navigate(paths.app.home.path)}
          >
             Back to home
          </Button>

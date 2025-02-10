@@ -1,26 +1,28 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { api } from '@/libs/api-client';
 import { MutationConfig } from '@/libs/react-query';
+import { Session } from '@/types/api';
 
-export const startSession = (): Promise<{ uuid: string; numeric_id: string }> => {
-    return api.post('/sessions/start/');
+export const startSession = (): Promise<Session> => {
+   return api.post('/sessions/start/');
 };
 
 type UseStartSessionOptions = {
-    mutationConfig?: MutationConfig<typeof startSession>;
+   mutationConfig?: MutationConfig<typeof startSession>;
 };
 
 export const useStartSession = ({ mutationConfig }: UseStartSessionOptions = {}) => {
-    const { onSuccess, ...restConfig } = mutationConfig || {};
+   const { onSuccess, ...restConfig } = mutationConfig || {};
 
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: startSession,
-        onSuccess: (data, ...args) => {
-            
-        },
-        ...restConfig,
-    });
+   return useMutation({
+      mutationFn: startSession,
+      onSuccess: (data, ...args) => {
+         if (onSuccess) {
+            console.log(data);
+            onSuccess?.(data, ...args);
+         }
+      },
+      ...restConfig,
+   });
 };

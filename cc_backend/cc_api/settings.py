@@ -10,11 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -25,9 +25,6 @@ SECRET_KEY = 'django-insecure-bf)7u$_d@#k9g$h6g#bjvx=(3dp-h@fn5ub8)q^hk1yx6=7*81
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,10 +34,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'cc_wordcloud'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,7 +67,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'cc_api.wsgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
+# WSGI_APPLICATION = 'cc_api.wsgi.application'
+ASGI_APPLICATION = 'cc_api.asgi.application'
 
 
 # Database
@@ -122,3 +128,13 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# print(os.getenv('ALLOWED_ORIGINS'))
+# CORS_ALLOWED_ORIGINS = os.getenv('ALLOWED_ORIGINS').split()
+
+# print(os.getenv('ALLOWED_HOSTS'))
+# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split()
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:5175", "http://192.168.178.138:5175"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "192.168.178.138", "0.0.0.0"]
+CORS_ALLOW_CREDENTIALS = True
