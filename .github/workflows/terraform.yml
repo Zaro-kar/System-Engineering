@@ -43,3 +43,20 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -parallelism=10 -auto-approve "tfplan"
         working-directory: terraform
+
+      - name: Set up AKS context
+        run: |
+          az aks get-credentials --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.CLUSTER_NAME }} --overwrite-existing
+          kubectl config view
+
+      - name: Install Ingress Controller
+        run: |
+          kubectl get namespace ingress-nginx || kubectl create namespace ingress-nginx
+          kubectl get deployment ingress-nginx-controller -n ingress-nginx || kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
+      - name: Create ACR Secret
+        run: |
+          kubectl get secret acr-secret >/dev/null 2>&1 || kubectl create secret docker-registry acr-secret \
+          --docker-server=${{ secrets.REGISTRY_NAME }}.azurecr.io \
+          --docker-username=${{ secrets.AZURE_CLIENT_ID }} \
+          --docker-password=${{ secrets.AZURE_CLIENT_SECRET }}
