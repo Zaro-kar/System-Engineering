@@ -28,7 +28,7 @@ class WordsUpdateConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add(self.group_name, self.channel_name)
             await self.accept()
 
-    async def disconnect(self, close_code):
+    async def disconnect(self, close_code): # pylint: disable=W0237
         """
         Handle websocket disconnection.
         """
