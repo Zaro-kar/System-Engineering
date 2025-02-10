@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { UseMutationOptions, DefaultOptions, QueryClient } from '@tanstack/react-query';
 
 export const queryConfig = {

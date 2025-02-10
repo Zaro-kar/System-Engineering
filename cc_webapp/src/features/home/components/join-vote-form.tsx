@@ -1,3 +1,4 @@
+import React from 'react';
 import { Alert, Box, Button } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +33,7 @@ export const JoinVoteForm = () => {
             : paths.app.presentation.getHref(sessionData.session_id, true);
 
          navigate(destination);
-      } catch (err) {
+      } catch {
          setError('Session not found. Please check the Sesson Code.');
       }
    };
