@@ -120,6 +120,7 @@ jobs:
   static-code-analysis-frontend:
     name: Static Code Analysis Frontend
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
