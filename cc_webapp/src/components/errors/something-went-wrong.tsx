@@ -16,7 +16,7 @@ export const SomethingWentWrong = () => {
          <WarningAmberRounded sx={{ fontSize: 60, pb: 1 }} color="primary" />
          <Typography variant="h4">Something went wrong</Typography>
          <Typography variant="h6">
-            There's an issue and the page could not be loaded.
+            {"There's an issue and the page could not be loaded."}
          </Typography>
          <Button
             onClick={() => {

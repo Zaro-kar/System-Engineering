@@ -1,11 +1,17 @@
+"""
+Tests for the cc_wordcloud app.
+"""
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from .models import Session
 
 
-
 class SessionTests(APITestCase):
+    """
+    Test case for the Session functionalities.
+    """
+
     def setUp(self):
         """
         Clear the database before each test to ensure a clean state.
@@ -111,7 +117,9 @@ class SessionTests(APITestCase):
         Test retrieving a session by its numeric ID.
         """
         session = Session.objects.create(numeric_id="001", words={'example': 2})
-        response = self.client.get(reverse('get-session-by-numeric-id', kwargs={'numeric_id': session.numeric_id}))
+        response = self.client.get(
+            reverse('get-session-by-numeric-id',
+                    kwargs={'numeric_id': session.numeric_id}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['uuid'], str(session.uuid))
         self.assertEqual(response.data['numeric_id'], session.numeric_id)

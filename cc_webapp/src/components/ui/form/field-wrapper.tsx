@@ -7,7 +7,4 @@ type FieldWrapperProps = {
    error?: FieldError | undefined;
 };
 
-export type FieldWrapperPassThoughProps = Omit<
-   FieldWrapperProps,
-   'className' | 'children'
->;
+export type FieldWrapperPassThoughProps = Omit<FieldWrapperProps, 'className' | 'children'>;

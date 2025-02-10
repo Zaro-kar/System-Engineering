@@ -1,5 +1,3 @@
-import { UseFormRegisterReturn } from 'react-hook-form';
-import { FieldWrapperPassThoughProps } from './field-wrapper';
 import {
    MenuItem,
    Select,
@@ -9,6 +7,9 @@ import {
    Box,
    FormHelperText,
 } from '@mui/material';
+import { UseFormRegisterReturn } from 'react-hook-form';
+
+import { FieldWrapperPassThoughProps } from './field-wrapper';
 
 type Option = {
    label: React.ReactNode;
@@ -55,22 +56,13 @@ export const SelectField = (props: SelectFieldProps) => {
          >
             {loading ? (
                <MenuItem disabled>
-                  <Box
-                     display="flex"
-                     alignItems="center"
-                     justifyContent="center"
-                     width="100%"
-                  >
+                  <Box display="flex" alignItems="center" justifyContent="center" width="100%">
                      <CircularProgress size={24} />
                   </Box>
                </MenuItem>
             ) : (
                options.map(({ label, value, disabled = false }) => (
-                  <MenuItem
-                     key={value.toString()}
-                     value={value}
-                     disabled={disabled}
-                  >
+                  <MenuItem key={value.toString()} value={value} disabled={disabled}>
                      {label}
                   </MenuItem>
                ))

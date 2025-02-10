@@ -1,9 +1,9 @@
-import React from 'react';
 import {
    Switch as MUISwitch,
    FormControlLabel,
    SwitchProps as MUISwitchProps,
 } from '@mui/material';
+import React from 'react';
 
 type CustomSwitchProps = MUISwitchProps & {
    label?: string | React.ReactNode;
@@ -22,7 +22,7 @@ const Switch = React.forwardRef<HTMLInputElement, CustomSwitchProps>(
       }
 
       return <MUISwitch className={className} inputRef={ref} {...props} />;
-   }
+   },
 );
 
 Switch.displayName = 'Switch';

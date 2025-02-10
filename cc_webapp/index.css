@@ -1,31 +1,31 @@
 html,
 body,
 * {
-  padding-top: env(safe-area-inset-top);
-  padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  scrollbar-width: thin;
-  scrollbar-color: grey transparent;
+   padding-top: env(safe-area-inset-top);
+   padding-right: env(safe-area-inset-right);
+   padding-bottom: env(safe-area-inset-bottom);
+   padding-left: env(safe-area-inset-left);
+   scrollbar-width: thin;
+   scrollbar-color: grey transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
+   width: 8px;
 }
 
 *::-webkit-scrollbar-track {
-  background-color: grey transparent;
+   background-color: grey transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+   background-color: rgba(255, 255, 255, 0.1);
+   border-radius: 4px;
 }
 
 .slider-list {
-  height: auto!important;
+   height: auto !important;
 }
 
 .slider-slide {
-  position: sticky!important;
+   position: sticky !important;
 }

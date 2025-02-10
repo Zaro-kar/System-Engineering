@@ -1,7 +1,8 @@
+import { TextField, TextFieldProps } from '@mui/material';
 import React from 'react';
 import { type UseFormRegisterReturn } from 'react-hook-form';
+
 import { FieldWrapperPassThoughProps } from './field-wrapper';
-import { TextField, TextFieldProps } from '@mui/material';
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
    FieldWrapperPassThoughProps & {
@@ -11,11 +12,7 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
    };
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-   (
-      { type, label, error, registration, maxRows, multiline, ...props },
-      ref,
-   ) => {
-
+   ({ type, label, error, registration, maxRows, multiline, ...props }, ref) => {
       return (
          <TextField
             maxRows={maxRows}

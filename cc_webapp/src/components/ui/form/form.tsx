@@ -1,3 +1,13 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+   Box,
+   FormControl as MUIFormControl,
+   FormControlProps,
+   FormHelperText,
+   InputLabel,
+   InputLabelProps,
+   Typography,
+} from '@mui/material';
 import * as React from 'react';
 import {
    Controller,
@@ -12,16 +22,6 @@ import {
    useFormContext,
 } from 'react-hook-form';
 import { ZodType, z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-   Box,
-   FormControl as MUIFormControl,
-   FormControlProps,
-   FormHelperText,
-   InputLabel,
-   InputLabelProps,
-   Typography,
-} from '@mui/material';
 
 type FormFieldContextValue<
    TFieldValues extends FieldValues = FieldValues,
@@ -30,9 +30,7 @@ type FormFieldContextValue<
    name: TName;
 };
 
-const FormFieldContext = React.createContext<FormFieldContextValue>(
-   {} as FormFieldContextValue,
-);
+const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
 
 const FormField = <
    TFieldValues extends FieldValues,
@@ -73,65 +71,57 @@ type FormItemContextValue = {
    id: string;
 };
 
-const FormItemContext = React.createContext<FormItemContextValue>(
-   {} as FormItemContextValue,
+const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
+
+const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+   ({ className, ...props }, ref) => {
+      const id = React.useId();
+
+      return (
+         <FormItemContext.Provider value={{ id }}>
+            <Box ref={ref} className={className} {...props} />
+         </FormItemContext.Provider>
+      );
+   },
 );
-
-const FormItem = React.forwardRef<
-   HTMLDivElement,
-   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-   const id = React.useId();
-
-   return (
-      <FormItemContext.Provider value={{ id }}>
-         <Box ref={ref} className={className} {...props} />
-      </FormItemContext.Provider>
-   );
-});
 FormItem.displayName = 'FormItem';
 
-const FormLabel = React.forwardRef<
-   HTMLLabelElement,
-   InputLabelProps
->(({ className, ...props }, ref) => {
-   const { error, formItemId } = useFormField();
+const FormLabel = React.forwardRef<HTMLLabelElement, InputLabelProps>(
+   ({ className, ...props }, ref) => {
+      const { error, formItemId } = useFormField();
 
-   return (
-      <InputLabel
-         ref={ref}
-         htmlFor={formItemId}
-         className={className}
-         error={!!error}
-         {...props}
-      />
-   );
-});
+      return (
+         <InputLabel
+            ref={ref}
+            htmlFor={formItemId}
+            className={className}
+            error={!!error}
+            {...props}
+         />
+      );
+   },
+);
 FormLabel.displayName = 'FormLabel';
 
-const FormControl = React.forwardRef<
-   HTMLDivElement,
-   FormControlProps
->(({ className, ...props }, ref) => {
-   const { error, formItemId, formDescriptionId, formMessageId } =
-      useFormField();
+const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
+   ({ className, ...props }, ref) => {
+      const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
-   return (
-      <MUIFormControl
-         ref={ref}
-         error={!!error}
-         className={className}
-         id={formItemId}
-         aria-describedby={
-            !error
-               ? `${formDescriptionId}`
-               : `${formDescriptionId} ${formMessageId}`
-         }
-         aria-invalid={!!error}
-         {...props}
-      />
-   );
-});
+      return (
+         <MUIFormControl
+            ref={ref}
+            error={!!error}
+            className={className}
+            id={formItemId}
+            aria-describedby={
+               !error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`
+            }
+            aria-invalid={!!error}
+            {...props}
+         />
+      );
+   },
+);
 FormControl.displayName = 'FormControl';
 
 const FormDescription = React.forwardRef<
@@ -165,12 +155,7 @@ const FormMessage = React.forwardRef<
    }
 
    return (
-      <FormHelperText
-         ref={ref}
-         id={formMessageId}
-         className={className}
-         {...props}
-      >
+      <FormHelperText ref={ref} id={formMessageId} className={className} {...props}>
          {body}
       </FormHelperText>
    );
@@ -200,11 +185,7 @@ const Form = <
    const form = useForm({ ...options, resolver: zodResolver(schema) });
    return (
       <FormProvider {...form}>
-         <form
-            className={className}
-            onSubmit={form.handleSubmit(onSubmit)}
-            id={id}
-         >
+         <form className={className} onSubmit={form.handleSubmit(onSubmit)} id={id}>
             {children(form)}
          </form>
       </FormProvider>

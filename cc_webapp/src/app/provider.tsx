@@ -1,15 +1,16 @@
-import * as React from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import { theme } from '@/themes';
 import { SnackbarProvider } from 'notistack';
-import { SomethingWentWrong } from '@/components/errors/something-went-wrong';
-import { queryConfig } from '@/libs/react-query';
+import * as React from 'react';
 import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+
+import { SomethingWentWrong } from '@/components/errors/something-went-wrong';
 import { CenterSpinner } from '@/components/ui';
+import { queryConfig } from '@/libs/react-query';
+import { theme } from '@/themes';
 
 type AppProviderProps = {
    children: React.ReactNode;
