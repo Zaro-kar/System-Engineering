@@ -20,5 +20,9 @@ spec:
         ports:
         - containerPort: 8080
         env:
-        - name: REACT_APP_API_URL
-          value: "http://cc-backend-service:8000" # URL zum Backend
+        - name: VITE_APP_API_URL
+          value: "http://50.85.88.155/api" # URL zum Backend
+        - name: VITE_APP_WS_UR
+          value: "ws://50.85.88.155/api" # URL zum Backend
+        - name: VITE_APP_FRONTEND_URL
+          value: "http://50.85.88.155" # URL zum Backend

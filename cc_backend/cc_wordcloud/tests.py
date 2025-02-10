@@ -25,9 +25,9 @@ class SessionTests(APITestCase):
         response = self.client.post(reverse('start-session'))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn('uuid', response.data)
-        self.assertIn('numeric_id', response.data)
+        self.assertIn('code', response.data)
         self.assertTrue(Session.objects.filter(uuid=response.data['uuid']).exists())
-        self.assertTrue(len(response.data['numeric_id']) == 3)
+        self.assertTrue(len(response.data['code']) == 3)
 
     def test_start_session_sequential_ids(self):
         """
@@ -36,7 +36,7 @@ class SessionTests(APITestCase):
         for i in range(5):
             response = self.client.post(reverse('start-session'))
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            self.assertEqual(response.data['numeric_id'], f"{i:03d}")
+            self.assertEqual(response.data['code'], f"{i:03d}")
 
     def test_start_session_all_ids_used(self):
         """
@@ -44,7 +44,7 @@ class SessionTests(APITestCase):
         """
         # Create the maximum number of sessions
         for i in range(1000):
-            Session.objects.create(numeric_id=i)
+            Session.objects.create(code=i)
 
         response = self.client.post(reverse('start-session'))
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -112,15 +112,15 @@ class SessionTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('error', response.data)
 
-    def test_get_session_by_numeric_id(self):
+    def test_get_session_by_code(self):
         """
         Test retrieving a session by its numeric ID.
         """
-        session = Session.objects.create(numeric_id="001", words={'example': 2})
+        session = Session.objects.create(code="001", words={'example': 2})
         response = self.client.get(
             reverse('get-session-by-numeric-id',
-                    kwargs={'numeric_id': session.numeric_id}))
+                    kwargs={'code': session.code}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['uuid'], str(session.uuid))
-        self.assertEqual(response.data['numeric_id'], session.numeric_id)
+        self.assertEqual(response.data['code'], session.code)
         self.assertEqual(response.data['words'], session.words)
