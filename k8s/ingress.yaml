@@ -17,7 +17,7 @@ spec:
             name: cc-webapp-service
             port:
               number: 80
-      - path: /api
+      - path: /api(/|$)(.*)
         pathType: Prefix
         backend:
           service:
