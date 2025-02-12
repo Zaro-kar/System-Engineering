@@ -5,6 +5,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false" 
     nginx.ingress.kubernetes.io/use-regex: "true" 
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
 spec:
   ingressClassName: nginx
   rules:
@@ -17,8 +18,6 @@ spec:
             name: cc-webapp-service
             port:
               number: 80
-        annotations:
-          nginx.ingress.kubernetes.io/rewrite-target: /
       - path: "/api"
         pathType: Prefix
         backend:
