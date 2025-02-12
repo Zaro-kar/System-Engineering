@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ import { API_URL} from '@/configs';
 import { paths } from '@/configs/path';
 import { SessionInfo } from '@/features/presentation/components/session-info';
 import { WordCloud } from '@/features/presentation/components/word-cloud';
+import { Home } from '@mui/icons-material';
 
 export const PresentationRoute = () => {
    const { session_id } = useParams<{ session_id: string }>();
@@ -66,6 +67,8 @@ export const PresentationRoute = () => {
          <Typography variant="h3" align="center">
             CrowdCloud
          </Typography>
+
+         <Button onClick={() => navigate(paths.app.home.getHref())} startIcon={<Home/>}>Home</Button>
 
          <SessionInfo session={sessionQuery.data} edit={isEdit} />
 
