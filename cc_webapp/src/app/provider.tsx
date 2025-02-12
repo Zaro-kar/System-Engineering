@@ -8,7 +8,6 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { SomethingWentWrong } from '@/components/errors/something-went-wrong';
-import { CenterSpinner } from '@/components/ui';
 import { queryConfig } from '@/libs/react-query';
 import { theme } from '@/themes';
 
@@ -25,7 +24,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
    );
 
    return (
-      <Suspense fallback={<CenterSpinner />}>
+      <Suspense>
          <ErrorBoundary FallbackComponent={SomethingWentWrong}>
             <QueryClientProvider client={queryClient}>
                {import.meta.env.DEV && <ReactQueryDevtools />}
