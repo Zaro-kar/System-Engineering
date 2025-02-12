@@ -23,6 +23,6 @@ spec:
         - name: VITE_APP_API_URL
           value: "http://50.85.88.155/api" # URL zum Backend
         - name: VITE_APP_WS_UR
-          value: "hhtp://50.85.88.155/api" # URL zum Backend
+          value: "http://50.85.88.155/api" # URL zum Backend
         - name: VITE_APP_FRONTEND_URL
           value: "http://50.85.88.155" # URL zum Backend
