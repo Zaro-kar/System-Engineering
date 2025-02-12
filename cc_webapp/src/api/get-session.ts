@@ -23,6 +23,7 @@ export const getSessionQueryOptions = ({ session_id, session_code }: GetSessionP
    return queryOptions({
       queryKey: ['session', session_id || session_code],
       queryFn: () => getSession({ session_id, session_code }),
+      gcTime: 0 // disable caching
    });
 };
 
