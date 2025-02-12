@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { api } from '@/libs/api-client';
@@ -25,8 +25,14 @@ type UseVoteWordsOptions = {
 };
 
 export const useVoteWords = ({ mutationConfig }: UseVoteWordsOptions = {}) => {
+   const queryClient = useQueryClient();
    const { ...restConfig } = mutationConfig || {};
    return useMutation({
+      onSuccess: () => {
+         queryClient.invalidateQueries({
+            queryKey: ['session'],
+         });
+      },
       ...restConfig,
       mutationFn: voteWords,
    });
