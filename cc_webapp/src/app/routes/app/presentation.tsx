@@ -5,7 +5,7 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 
 import { useGetSession } from '@/api/get-session';
 import { MainLayout } from '@/components/layout/main-layout';
-import { WS_URL } from '@/configs';
+import { API_URL} from '@/configs';
 import { paths } from '@/configs/path';
 import { SessionInfo } from '@/features/presentation/components/session-info';
 import { WordCloud } from '@/features/presentation/components/word-cloud';
@@ -20,7 +20,7 @@ export const PresentationRoute = () => {
 
    useEffect(() => {
       if (!session_id) return;
-      const socket = new WebSocket(`${WS_URL}/ws/sessions/${session_id}/`);
+      const socket = new WebSocket(`${API_URL}/ws/sessions/${session_id}/`);
 
       socket.onopen = () => {
          console.log('WebSocket connected');
