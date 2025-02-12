@@ -17,6 +17,7 @@ spec:
             name: cc-webapp-service
             port:
               number: 80
+        nginx.ingress.kubernetes.io/rewrite-target: /
       - path: "/api"
         pathType: Prefix
         backend:
