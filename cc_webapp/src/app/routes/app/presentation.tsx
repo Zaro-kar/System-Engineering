@@ -52,7 +52,7 @@ export const PresentationRoute = () => {
    }, [sessionQuery.data?.session_id, navigate]);
 
    if (sessionQuery.isFetching) {
-      return <Typography>Loading...</Typography>;
+      return null;
    }
 
    if (sessionQuery.isError) {

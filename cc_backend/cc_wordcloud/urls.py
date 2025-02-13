@@ -16,7 +16,7 @@ urlpatterns = [
          name='start-session'),
     path('sessions/<uuid:uuid>/close/',
          CloseSessionView.as_view(),
-         name='end-session'),
+         name='close-session'),
     path('sessions/<uuid:uuid>/vote/',
          VoteView.as_view(),
          name='vote'),
